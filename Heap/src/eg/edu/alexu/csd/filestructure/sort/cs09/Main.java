@@ -5,6 +5,7 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		MyHeap x = new MyHeap<>();
+		System.out.println();
 		x.insert(16);
 		x.insert(4);
 		x.insert(10);
@@ -17,7 +18,9 @@ public class Main {
 		x.insert(1);
 		x.print();
 		System.out.println(x.size());
-		//x.heapify(node);
+		Node cd = new Node<>();
+		x.heapify(cd);
+		x.print();
 
 		
 

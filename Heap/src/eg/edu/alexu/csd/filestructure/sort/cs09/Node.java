@@ -2,7 +2,12 @@ package eg.edu.alexu.csd.filestructure.sort.cs09;
 
 import eg.edu.alexu.csd.filestructure.sort.INode;
 
-public class Node <T extends Comparable<T>> implements INode <T> {
+/**
+ * @author ahmednasser
+ *
+ * @param <T>
+ */
+public class Node<T extends Comparable<T>> implements INode<T> {
 	private T nodeValue;
 	private Node<T> left;
 	private Node<T> right;
@@ -37,35 +42,32 @@ public class Node <T extends Comparable<T>> implements INode <T> {
 	public void setValue(T value) {
 		// TODO Auto-generated method stub
 		this.nodeValue = value;
-		
+
 	}
 
-	
 	public int getIndex() {
 		// TODO Auto-generated method stub
 		return index;
 	}
 
-	
 	public void setIndex(int nodeIndex) {
 		// TODO Auto-generated method stub
 		this.index = nodeIndex;
-		
-	}
-	
-	public void setLeftChild(Node<T> left) {
-		// TODO Auto-generated method stub
-		this.left=left;
+
 	}
 
-	
+	public void setLeftChild(Node<T> left) {
+		// TODO Auto-generated method stub
+		this.left = left;
+	}
+
 	public void setRightChild(Node<T> right) {
 		// TODO Auto-generated method stub
-		this.right=right;
+		this.right = right;
 	}
 
 	public void setParent(Node<T> parent) {
 		// TODO Auto-generated method stub
-		this.parent=parent;
+		this.parent = parent;
 	}
 }
