@@ -52,4 +52,20 @@ public class Node <T extends Comparable<T>> implements INode <T> {
 		this.index = nodeIndex;
 		
 	}
+	
+	public void setLeftChild(Node<T> left) {
+		// TODO Auto-generated method stub
+		this.left=left;
+	}
+
+	
+	public void setRightChild(Node<T> right) {
+		// TODO Auto-generated method stub
+		this.right=right;
+	}
+
+	public void setParent(Node<T> parent) {
+		// TODO Auto-generated method stub
+		this.parent=parent;
+	}
 }

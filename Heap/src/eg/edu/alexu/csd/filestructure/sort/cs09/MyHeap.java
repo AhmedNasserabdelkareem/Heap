@@ -10,6 +10,7 @@ import eg.edu.alexu.csd.filestructure.sort.INode;
 public class MyHeap <T extends Comparable<T>> implements IHeap<T> {
 	private ArrayList<Node<T>> tree = new ArrayList<>();
 	private int size=-1;
+	private final static int ROOT_INDEX=0;
 
 	@Override
 	public INode<T> getRoot() {
@@ -45,6 +46,7 @@ public class MyHeap <T extends Comparable<T>> implements IHeap<T> {
 		}	
 		if (max!=nodeIndex) {
 	        Collections.swap(tree, nodeIndex, max);
+	        buildHeap(ROOT_INDEX);
 	        heapify(tree.get(max));
 		}
 		
@@ -65,6 +67,7 @@ public class MyHeap <T extends Comparable<T>> implements IHeap<T> {
 		temp.setValue(element);
 		temp.setIndex(size);
 		tree.add(temp);
+		buildHeap(size);
 		}else {
 			throw null;
 		}
@@ -89,6 +92,22 @@ public class MyHeap <T extends Comparable<T>> implements IHeap<T> {
 	}
 	private int getParentIndex(int index) {
 		return ((index-1)/2);		
+	}
+	
+	private void buildHeap(int current) {
+		for (int i=current;i<size();i++) {
+			if((getParentIndex(i)>=0)&&(getParentIndex(i)<size())) {
+				tree.get(i).setParent(tree.get(getParentIndex(i)));
+			}
+			if((getRightIndex(i)>=0)&&(getRightIndex(i)<size())) {
+				tree.get(i).setRightChild(tree.get(getRightIndex(i)));
+			}
+			if((getLeftIndex(i)>=0)&&(getLeftIndex(i)<size())) {
+				tree.get(i).setLeftChild(tree.get(getLeftIndex(i)));
+			}
+			tree.get(i).setIndex(i);
+			
+		}
 	}
 	
 	public void print() {
