@@ -104,6 +104,9 @@ public class MyHeap<T extends Comparable<T>> implements IHeap<T> {
 	}
 
 	private int getParentIndex(int index) {
+		if ((index-FIRST_INDEX)<0) {
+			return NOT_FOUND_ERROR;
+		}
 		return ((index - FIRST_INDEX) / SECOND_INDEX);
 	}
 
