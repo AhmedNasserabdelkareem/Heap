@@ -11,8 +11,13 @@ public class MySort<T extends Comparable<T>> implements ISort<T> {
 	public IHeap<T> heapSort(ArrayList<T> unordered) {
 		MyHeap<T> h = new MyHeap<>();
 		h.build(unordered);
-		
-		return h;
+		MyHeap<T> h2 = new MyHeap<>();
+		h2.build(unordered);
+		for(int i = unordered.size()-1;i>0;i--){
+			unordered.set(i,h.extract());
+			h.heapify(h.getRoot());
+		}		
+		return h2;
 	}
 
 	@Override
