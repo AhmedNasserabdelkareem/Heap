@@ -20,7 +20,7 @@ public class Main {
 		System.out.println(x.size());
 		Node cd = new Node<>();
 		cd.setValue(4);
-		x.heapify(cd);
+	//	x.heapify(cd);
 		x.print();
 
 		

@@ -31,17 +31,14 @@ public class MyHeap<T extends Comparable<T>> implements IHeap<T> {
 	@Override
 	public int size() {
 		// TODO Auto-generated method stub
-		if (size > ROOT_INDEX)
-			return size;
-		throw null;
+			return size;		
 	}
 
 	@Override
 	public void heapify(INode<T> node) {
 		// TODO Auto-generated method stub
-		if(node!=null&&searchKey(node)!=NOT_FOUND_ERROR) {
-			node = tree.get(searchKey(node));
-			int nodeIndex = ((Node<T>) node).getIndex();
+		int nodeIndex = tree.indexOf(node);
+		if(node!=null&&nodeIndex!=NOT_FOUND_ERROR) {
 			int leftIndex = getLeftIndex(nodeIndex);
 			int rightIndex = getRightIndex(nodeIndex);
 			int max = ROOT_INDEX;
@@ -59,8 +56,6 @@ public class MyHeap<T extends Comparable<T>> implements IHeap<T> {
 				buildHeap();
 				heapify(tree.get(max));
 			}
-		}else {
-			throw null;
 		}
 	
 
@@ -133,14 +128,15 @@ public class MyHeap<T extends Comparable<T>> implements IHeap<T> {
 		System.out.println();
 	}
 
-	private int searchKey(INode<T> node){
+	/*private int searchKey(INode<T> node){
 		for (int i = ROOT_INDEX; i < tree.size(); i++) {
 			if(tree.get(i).getValue().compareTo(node.getValue())==ROOT_INDEX) {
 				return i;
 			}
 		}
+		
 		return NOT_FOUND_ERROR;
 		
 		
-	}
+	}*/
 }
