@@ -4,12 +4,28 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+import javax.swing.text.html.HTMLDocument.Iterator;
+
 import eg.edu.alexu.csd.filestructure.sort.IHeap;
 import eg.edu.alexu.csd.filestructure.sort.INode;
 
 /**
- * @author ahmednasser
- *
+ * 
+ * 
+ * getParentIndex ,getRightChildIndex , getLeftChildIndex ,, should be in the node itself
+ * it isn't efficient to loop through all the tree at each insertion or even heapify
+ 		i think we should ignore getParent .. and use getIndex , getParent Index , .. 
+ 		when we swap or add elements , we will change only the index of the node
+ 		
+ 		and if it is necessary to set parent,l&r children nodes , we shall do it in O(c)  
+ * finally the flow should be :
+ 		h.build(list); //that will build the max heap using heapify
+ 		start loop (collection size) times
+ 		heapNO2.Insert(h.extract); // remove the max 
+ 		heapify the root 
+ 		end loop
+ 		return heapNo2
+ *TODO move getparent&LC&RCIndex to node , if(getparent is important for the tester , change the buildHeap method to run in O(c) )
  * @param <T>
  */
 public class MyHeap<T extends Comparable<T>> implements IHeap<T> {
@@ -22,7 +38,6 @@ public class MyHeap<T extends Comparable<T>> implements IHeap<T> {
 
 	@Override
 	public INode<T> getRoot() {
-		// TODO Auto-generated method stub
 		if (size > ROOT_INDEX)
 			return tree.get(ROOT_INDEX);
 		return null;
@@ -30,30 +45,27 @@ public class MyHeap<T extends Comparable<T>> implements IHeap<T> {
 
 	@Override
 	public int size() {
-		// TODO Auto-generated method stub
 			return size;		
 	}
 
 	@Override
 	public void heapify(INode<T> node) {
-		// TODO Auto-generated method stub
 		int nodeIndex = tree.indexOf(node);
 		if(node!=null&&nodeIndex!=NOT_FOUND_ERROR) {
-			int leftIndex = getLeftIndex(nodeIndex);
-			int rightIndex = getRightIndex(nodeIndex);
+			int leftIndex = ((Node<T>) node).getLeftIndex();
+			int rightIndex = ((Node<T>) node).getRightIndex();
 			int max = ROOT_INDEX;
-			if ((leftIndex < size) && (tree.get(leftIndex).getValue().compareTo(node.getValue()) > ROOT_INDEX)) {
+			if ((leftIndex < size) && (tree.get(leftIndex).getValue().compareTo(node.getValue()) > 0)) {
 				max = leftIndex;
 			} else {
 				max = ((Node<T>) node).getIndex();
 			}
 
-			if ((rightIndex < size) && (tree.get(rightIndex).getValue().compareTo(tree.get(max).getValue()) > ROOT_INDEX)) {
+			if ((rightIndex < size) && (tree.get(rightIndex).getValue().compareTo(tree.get(max).getValue()) > 0)) {
 				max = rightIndex;
 			}
 			if (max != nodeIndex) {
-				Collections.swap(tree, nodeIndex, max);
-				buildHeap();
+				swap( nodeIndex, max);
 				heapify(tree.get(max));
 			}
 		}
@@ -61,82 +73,72 @@ public class MyHeap<T extends Comparable<T>> implements IHeap<T> {
 
 	}
 
-	@Override
-	public T extract() {
-		// TODO Auto-generated method stub
-		return null;
+	private void swap(int nodeIndex, int max) {
+		T temp =tree.get(nodeIndex).getValue();
+		tree.get(nodeIndex).setValue(tree.get(max).getValue());
+		tree.get(max).setValue(temp);
 	}
 
 	@Override
+	public T extract() {
+		T t =tree.get(0).getValue();
+		this.size--;
+		swap(0,size);
+		tree.set(size, null);
+		return t ;
+	}
+
+	
+
+	@Override
 	public void insert(T element) {
-		// TODO Auto-generated method stub
 		if (element != null) {
 			Node<T> temp = new Node<>();
 			temp.setValue(element);
 			temp.setIndex(size);
-			tree.add(temp);
+			tree.add( temp);
+			//			tree.add(0, temp); if we should return it min heapify
 			size++;
-			buildHeap();
+			int parentIndex = temp.getParentIndex();
+			if (parentIndex >= 0 &&parentIndex< size()) {
+				Node<T> Parent = tree.get(parentIndex);
+
+			temp.setParent(tree.get(parentIndex));
+			if(Parent.getRightIndex()==size-1){
+				Parent.setRightChild(temp);
+			}else{
+				Parent.setLeftChild(temp);
+
+			}
+		}
+			
+
 		} else {
-			throw null;
+			throw new RuntimeException("insert null");
 		}
 
 	}
-
+	
+	
 	@Override
 	public void build(Collection<T> unordered) {
-		// TODO Auto-generated method stub
-
-	}
-
-	private int getLeftIndex(int index) {
-		return (index * SECOND_INDEX) + FIRST_INDEX;
-	}
-
-	private int getRightIndex(int index) {
-		return (index * SECOND_INDEX) + SECOND_INDEX;
-
-	}
-
-	private int getParentIndex(int index) {
-		if ((index-FIRST_INDEX)<0) {
-			return NOT_FOUND_ERROR;
+		java.util.Iterator<T> it = unordered.iterator();
+		tree.clear();
+		size=0;
+		while(it.hasNext()){
+			this.insert(it.next());
 		}
-		return ((index - FIRST_INDEX) / SECOND_INDEX);
-	}
-
-	private void buildHeap() {
-		for (int i = ROOT_INDEX; i < size(); i++) {
-			if ((getParentIndex(i) >= ROOT_INDEX) && (getParentIndex(i) < size())) {
-				tree.get(i).setParent(tree.get(getParentIndex(i)));
-			}
-			if ((getRightIndex(i) >= ROOT_INDEX) && (getRightIndex(i) < size())) {
-				tree.get(i).setRightChild(tree.get(getRightIndex(i)));
-			}
-			if ((getLeftIndex(i) >= ROOT_INDEX) && (getLeftIndex(i) < size())) {
-				tree.get(i).setLeftChild(tree.get(getLeftIndex(i)));
-			}
-			tree.get(i).setIndex(i);
-
+		for(int i = size()/2-1;i>=0;i--){
+			heapify(tree.get(i));
 		}
 	}
+
 
 	public void print() {
-		for (int i = ROOT_INDEX; i < tree.size(); i++) {
+		for (int i = 0; i < tree.size(); i++) {
 			System.out.print(tree.get(i).getValue() + " ");
 		}
 		System.out.println();
 	}
 
-	/*private int searchKey(INode<T> node){
-		for (int i = ROOT_INDEX; i < tree.size(); i++) {
-			if(tree.get(i).getValue().compareTo(node.getValue())==ROOT_INDEX) {
-				return i;
-			}
-		}
-		
-		return NOT_FOUND_ERROR;
-		
-		
-	}*/
 }
