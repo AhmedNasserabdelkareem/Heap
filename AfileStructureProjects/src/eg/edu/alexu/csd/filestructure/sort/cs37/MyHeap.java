@@ -9,25 +9,7 @@ import javax.swing.text.html.HTMLDocument.Iterator;
 import eg.edu.alexu.csd.filestructure.sort.IHeap;
 import eg.edu.alexu.csd.filestructure.sort.INode;
 
-/**
- * 
- * 
- * getParentIndex ,getRightChildIndex , getLeftChildIndex ,, should be in the node itself
- * it isn't efficient to loop through all the tree at each insertion or even heapify
- 		i think we should ignore getParent .. and use getIndex , getParent Index , .. 
- 		when we swap or add elements , we will change only the index of the node
- 		
- 		and if it is necessary to set parent,l&r children nodes , we shall do it in O(c)  
- * finally the flow should be :
- 		h.build(list); //that will build the max heap using heapify
- 		start loop (collection size) times
- 		heapNO2.Insert(h.extract); // remove the max 
- 		heapify the root 
- 		end loop
- 		return heapNo2
- *TODO move getparent&LC&RCIndex to node , if(getparent is important for the tester , change the buildHeap method to run in O(c) )
- * @param <T>
- */
+
 public class MyHeap<T extends Comparable<T>> implements IHeap<T> {
 	private ArrayList<Node<T>> tree = new ArrayList<>();
 	private int size = 0;
@@ -85,33 +67,34 @@ public class MyHeap<T extends Comparable<T>> implements IHeap<T> {
 
 	@Override
 	public T extract() {
-		heapifyAll();
+		
 
-		try{
+		
 		if(size>0){
 		T t =tree.get(0).getValue();
 		swap(0,size-1);
+		int pIndex=tree.get(size-1).getParentIndex();
+		if(pIndex>=0){
+		Node<T>parent =tree.get(pIndex);
+		if(parent.getLeftIndex()==size-1){
+			parent.setLeftChild(null);
+		}else{
+			parent.setRightChild(null);
+		}
+		}
 		tree.remove(size-1);
 		this.size--;
-
-	if(size>0){
-	heapify(tree.get(0));
-	
-		}
+	heapifyAll();
 		return t ;
-		}else{
-			throw new RuntimeException("can't extract empty heap");
 		}
-		}catch(Exception e){
-			throw new RuntimeException("extract -size"+size);
-		}
+		return null;
+		
 	}
 
 	
 
 	@Override
 	public void insert(T element) {
-		try{
 		if (element != null) {
 			Node<T> temp = new Node<T>();
 			temp.setValue(element);
@@ -119,35 +102,58 @@ public class MyHeap<T extends Comparable<T>> implements IHeap<T> {
 			tree.add( temp);
 			size++;
 			int parentIndex = temp.getParentIndex();
+			
 			if (parentIndex >= 0 &&parentIndex< size()) {
 				Node<T> Parent = tree.get(parentIndex);
-
-			temp.setParent(tree.get(parentIndex));
-			if(Parent.getRightIndex()==size-1){
+			temp.setParent(Parent);
+			if(Parent.getRightIndex()==temp.getIndex()){
 				Parent.setRightChild(temp);
-			}else if(Parent.getLeftIndex()==size-1){
+			}else if(Parent.getLeftIndex()==temp.getIndex()){
 				Parent.setLeftChild(temp);
-			}else{
-				throw new RuntimeException("unexpected behaviour in insert");
 			}
 			heapifyAll();
 		}
 			
 
-		} else {
-			throw new RuntimeException("insert null");
-		}
-		}catch(Exception e){
-			throw new RuntimeException("insert -size"+size);
 		}
 
 	}
 	
+	public void insertWithoutHeapify(T element) {
+		if (element != null) {
+			Node<T> temp = new Node<T>();
+			temp.setValue(element);
+			temp.setIndex(size);
+			tree.add( temp);
+			size++;
+			int parentIndex = temp.getParentIndex();
+			
+			if (parentIndex >= 0 &&parentIndex< size()) {
+				Node<T> Parent = tree.get(parentIndex);
+			temp.setParent(Parent);
+			if(Parent.getRightIndex()==temp.getIndex()){
+				Parent.setRightChild(temp);
+			}else if(Parent.getLeftIndex()==temp.getIndex()){
+				Parent.setLeftChild(temp);
+			}
+		//	heapifyAll();
+		}
+			
+
+		}
+
+	}
 	
 	private void heapifyAll() {
 		for(int i =size()/2-1;i>=0;i--){
 			heapify(tree.get(i));
-		}		
+		}
+		for(int i=0;i<size();i++){
+			try{
+		}catch(Exception e){
+			
+		}
+		}
 	}
 
 	@Override
@@ -161,7 +167,7 @@ public class MyHeap<T extends Comparable<T>> implements IHeap<T> {
 		}
 		heapifyAll();
 		}catch(Exception e){
-			throw new RuntimeException("build -size"+size);
+			throw e;
 		}
 	}
 

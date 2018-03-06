@@ -1,6 +1,7 @@
 package eg.edu.alexu.csd.filestructure.sort.cs37;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import eg.edu.alexu.csd.filestructure.sort.IHeap;
 import eg.edu.alexu.csd.filestructure.sort.ISort;
@@ -14,8 +15,12 @@ public class MySort<T extends Comparable<T>> implements ISort<T> {
 
 		heap.build(unordered);
 		int size = heap.size();
+		LinkedList<T> ll = new LinkedList<T>();
 		for(int i=0;i<size;i++){
-			returned.insert(heap.extract());
+			ll.addFirst(heap.extract());
+		}
+		for(int i=0;i<ll.size();i++){
+		returned.insertWithoutHeapify(ll.get(i));
 		}
 		return returned;
 		

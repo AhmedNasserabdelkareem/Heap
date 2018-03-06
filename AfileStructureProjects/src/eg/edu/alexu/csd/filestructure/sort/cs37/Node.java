@@ -9,9 +9,9 @@ import eg.edu.alexu.csd.filestructure.sort.INode;
  */
 public class Node<T extends Comparable<T>> implements INode<T> {
 	private T nodeValue;
-	private Node<T> left;
-	private Node<T> right;
-	private Node<T> parent;
+	private Node<T> left=null;
+	private Node<T> right=null;
+	private Node<T> parent=null;
 	private int index;
 
 	@Override
